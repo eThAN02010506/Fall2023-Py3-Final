@@ -53,6 +53,7 @@ WARNING = 'warning'
 INFO = 'info'
 LIGHT = 'light'
 DARK = 'dark'
+SUPERHERO = 'superhero'
 
 # Bootstyle Types
 OUTLINE = 'outline'
