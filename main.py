@@ -1,7 +1,7 @@
 import ttkbootstrap as tb
 from K import *
 from views import login, tasks, users
-
+import requests as req
 
 class TaskApp(tb.Window):
 
@@ -36,7 +36,7 @@ class TaskApp(tb.Window):
     def getauth(self):
         if self.token.get("token_type") != "bearer":
             return {}
-        return {"Authorization": self.token.get("token_type") + " " + self.token.get("access_token")}
+        return { "Authorization": self.token.get("token_type") + " " + self.token.get("access_token") }
 
     def create_header(self):
         self.header_frame = tb.Frame(self, bootstyle=PRIMARY)
@@ -62,12 +62,12 @@ class TaskApp(tb.Window):
 
     def show_task_view(self, id):
         self.set_current_view("view_task")
-        self.current_view.refresh(id)
+        self.current_view.refresh(id)            
 
     def show_tasks_view(self, refresh=False):
-        if refresh:
-            self.views["view_tasks"] = tasks.TasksView(self)
         self.set_current_view("view_tasks")
+        if refresh:
+            self.current_view.refresh()       
 
     def show_create_task_view(self):
         self.set_current_view("create_task")

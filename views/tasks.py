@@ -1,12 +1,9 @@
 import ttkbootstrap as tb
 from views.helper import View
-import requests
 import requests as req
-
 from tkinter import *
 from tkinter.ttk import *
 from K import *
-
 
 class TasksView(View):
     def __init__(self, app):
@@ -14,29 +11,36 @@ class TasksView(View):
         self.create_widgets()
 
     def create_widgets(self):
-        tb.Button(self.frame, text="Create Task", command=self.app.show_create_task_view).grid(row=0, column=5,
-                                                                                               sticky=W, pady=2)
-        tasks = requests.get(self.app.geturl("/tasks"), headers=self.app.getauth())
+        tb.Button(self.frame, text="Create Task", command=self.app.show_create_task_view).grid(row = 0, column = 5, sticky = W, pady = 2)
+        tb.Label(self.frame, text = "No tasks found").grid(row = 1, column = 0, columnspan=7, sticky = W, pady = 2)
+
+    def refresh(self):
+        for child in self.frame.winfo_children():
+            child.destroy()
+        
+        tb.Button(self.frame, text="Create Task", command=self.app.show_create_task_view).grid(row = 0, column = 5, sticky = W, pady = 2)
+
+        tasks = req.get(self.app.geturl("/tasks"), headers=self.app.getauth())
         if tasks.status_code != 200:
-            tb.Label(self.frame, text="No tasks found").grid(row=1, column=0, columnspan=7, sticky=W, pady=2)
+            tb.Label(self.frame, text = "No tasks found").grid(row = 1, column = 0, columnspan=7, sticky = W, pady = 2)
         else:
-            tb.Label(self.frame, text="ID").grid(row=1, column=0, sticky=W, pady=2)
-            tb.Label(self.frame, text="Title").grid(row=1, column=1, sticky=W, pady=2)
-            tb.Label(self.frame, text="Priority").grid(row=1, column=2, sticky=W, pady=2)
-            tb.Label(self.frame, text="Complete").grid(row=1, column=3, sticky=W, pady=2)
-            tb.Label(self.frame, text="CreateTime").grid(row=1, column=4, sticky=W, pady=2)
-            tb.Label(self.frame, text="Operation").grid(row=1, column=5, columnspan=2, sticky=W, pady=2)
+            tb.Label(self.frame, text = "ID").grid(row = 1, column = 0, sticky = W, pady = 2)
+            tb.Label(self.frame, text = "Title").grid(row = 1, column = 1, sticky = W, pady = 2)
+            tb.Label(self.frame, text = "Priority").grid(row = 1, column = 2, sticky = W, pady = 2)
+            tb.Label(self.frame, text = "Complete").grid(row = 1, column = 3, sticky = W, pady = 2)
+            tb.Label(self.frame, text = "CreateTime").grid(row = 1, column = 4, sticky = W, pady = 2)
+            tb.Label(self.frame, text = "Operation").grid(row = 1, column = 5, columnspan=2, sticky = W, pady = 2)
 
             i = 2
             for task in tasks.json():
                 oper = TaskOperation(self, self.app, task.get("id"))
-                tb.Label(self.frame, text=task.get("id")).grid(row=i, column=0, sticky=W, pady=2)
-                tb.Label(self.frame, text=task.get("title")).grid(row=i, column=1, sticky=W, pady=2)
-                tb.Label(self.frame, text=task.get("priority")).grid(row=i, column=2, sticky=W, pady=2)
-                tb.Label(self.frame, text=task.get("complete")).grid(row=i, column=3, sticky=W, pady=2)
-                tb.Label(self.frame, text=task.get("created_on")).grid(row=i, column=4, sticky=W, pady=2)
-                tb.Button(self.frame, text="Update", command=oper.show_task).grid(row=i, column=5, sticky=W, pady=2)
-                tb.Button(self.frame, text="Delete", command=oper.delete_task).grid(row=i, column=6, sticky=W, pady=2)
+                tb.Label(self.frame, text = task.get("id")).grid(row = i, column = 0, sticky = W, pady = 2)
+                tb.Label(self.frame, text = task.get("title")).grid(row = i, column = 1, sticky = W, pady = 2)
+                tb.Label(self.frame, text = task.get("priority")).grid(row = i, column = 2, sticky = W, pady = 2)
+                tb.Label(self.frame, text = task.get("complete")).grid(row = i, column = 3, sticky = W, pady = 2)
+                tb.Label(self.frame, text = task.get("created_on")).grid(row = i, column = 4, sticky = W, pady = 2)
+                tb.Button(self.frame, text="Update", command=oper.show_task).grid(row = i, column = 5, sticky = W, pady = 2)
+                tb.Button(self.frame, text="Delete", command=oper.delete_task).grid(row = i, column = 6, sticky = W, pady = 2)
                 i = i + 1
 
 
@@ -46,6 +50,9 @@ class TaskOperation:
         self.owner = owner
         self.id = id
 
+    def show_task(self):
+        self.app.show_task_view(self.id)
+
     def delete_task(self):
         rsp = req.delete(self.app.geturl(f"/tasks/{self.id}"), headers=self.app.getauth())
         if rsp.status_code == 204:
@@ -53,9 +60,6 @@ class TaskOperation:
             self.app.show_tasks_view(True)
         else:
             self.owner.create_toast("Task delete", f"Task '{self.id}' delete failed")
-
-    def show_task(self):
-        self.app.show_task_view(self.id)
 
 
 class TaskView(View):
@@ -88,10 +92,10 @@ class TaskView(View):
         tb.Entry(container, textvariable=self.complete, bootstyle=SUPERHERO).pack(padx=10, pady=10)
 
         # Submit Button
-        tb.Button(container, text="Submit", command=self.update_task, bootstyle=SUCCESS).pack(padx=10, pady=10, anchor=W
-                                                                                              , side=LEFT)
-        tb.Button(container, text="Cancel", command=self.cancel, bootstyle=SUCCESS).pack(padx=10, pady=10, anchor=W
-                                                                                         , side=LEFT)
+        tb.Button(container, text="Submit", command=self.update_task
+            , bootstyle=SUCCESS).pack(padx=10, pady=10, anchor=W, side=LEFT)
+        tb.Button(container, text="Cancel", command=self.app.show_tasks_view
+            , bootstyle=SUCCESS).pack(padx=10, pady=10, anchor=W, side=LEFT)
 
     def refresh(self, id):
         rsp = req.get(self.app.geturl(f"/tasks/{id}"), headers=self.app.getauth())
@@ -110,18 +114,13 @@ class TaskView(View):
         priority = self.priority.get()
         complete = self.complete.get()
 
-        rsp = req.put(self.app.geturl(f"/tasks/{id}"),
-                      json={"id": id, "title": title, "description": desc, "priority": priority, "complete": complete},
-                      headers=self.app.getauth())
+        rsp = req.put(self.app.geturl(f"/tasks/{id}"),  json={ "id": id, "title": title, "description":desc, "priority":priority, "complete": complete }, headers=self.app.getauth())
         if rsp.status_code == 204:
             self.create_toast("Task Updated", f"Task '{title}' updated successfully")
             self.app.show_tasks_view(True)
         else:
             self.create_toast("Task Update", f"Task '{title}' update failed")
             self.app.show_tasks_view()
-
-    def cancel(self):
-        self.app.show_tasks_view()
 
 
 class CreateTaskView(View):
@@ -148,8 +147,7 @@ class CreateTaskView(View):
         desc = self.desc.get()
         priority = self.priority.get()
 
-        rsp = req.post(self.app.geturl("/tasks"), json={"title": title, "description": desc, "priority": priority},
-                       headers=self.app.getauth())
+        rsp = req.post(self.app.geturl("/tasks"),  json={ "title": title, "description":desc, "priority":priority }, headers=self.app.getauth())
         if rsp.status_code == 201:
             self.create_toast("Task Created", f"Task '{title}' created successfully")
         else:
@@ -157,3 +155,4 @@ class CreateTaskView(View):
 
         # After creating the task, show the task page
         self.app.show_tasks_view(True)
+        
