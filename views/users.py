@@ -8,11 +8,22 @@ import requests as req
 class UserView(View):
     def __init__(self, app):
         super().__init__(app)
+
         self.name = tb.StringVar()
         self.nickname = tb.StringVar()
         self.email = tb.StringVar()
         self.password = tb.StringVar()
+        self.background()
         self.create_widgets()
+    def background(self):
+        # Load the background image
+        background_image = tk.PhotoImage(file="Images/截屏2024-01-15 21.31.11.png")
+
+        # Create a Label with the background image (couldn't figure out how to use ttkbootstrap to do this... so, used
+        # tkinter.)
+        background_label = tk.Label(self.frame, image=background_image)
+        background_label.photo = background_image
+        background_label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
     def create_widgets(self):
         # Create a container frame to organize widgets
@@ -20,24 +31,24 @@ class UserView(View):
         container.place(relx=0.5, rely=0.5, anchor=CENTER)
 
         # Email Label and Entry
-        tb.Label(container, text="Name", bootstyle=SUPERHERO).pack(padx=10, pady=10, anchor=W)
-        tb.Entry(container, textvariable=self.name, bootstyle=SUPERHERO).pack(padx=10, pady=10)
+        tb.Label(container, text="Name", bootstyle=SUPERHERO).pack(padx=10, pady=5, anchor=W)
+        tb.Entry(container, textvariable=self.name, bootstyle=SUPERHERO).pack(padx=10, pady=5)
 
         # Password Label and Entry
-        tb.Label(container, text="Nickname", bootstyle=SUPERHERO).pack(padx=10, pady=10, anchor=W)
-        tb.Entry(container, textvariable=self.nickname, bootstyle=SUPERHERO).pack(padx=10, pady=10)
+        tb.Label(container, text="Nickname", bootstyle=SUPERHERO).pack(padx=10, pady=5, anchor=W)
+        tb.Entry(container, textvariable=self.nickname, bootstyle=SUPERHERO).pack(padx=10, pady=5)
 
-        tb.Label(container, text="Email", bootstyle=SUPERHERO).pack(padx=10, pady=10, anchor=W)
-        tb.Entry(container, textvariable=self.email, bootstyle=SUPERHERO).pack(padx=10, pady=10)
+        tb.Label(container, text="Email", bootstyle=SUPERHERO).pack(padx=10, pady=5, anchor=W)
+        tb.Entry(container, textvariable=self.email, bootstyle=SUPERHERO).pack(padx=10, pady=5)
 
-        tb.Label(container, text="Password", bootstyle=SUPERHERO).pack(padx=10, pady=10, anchor=W)
-        tb.Entry(container, textvariable=self.password, show="*", bootstyle=SUPERHERO).pack(padx=10, pady=10)
+        tb.Label(container, text="Password", bootstyle=SUPERHERO).pack(padx=10, pady=5, anchor=W)
+        tb.Entry(container, textvariable=self.password, show="*", bootstyle=SUPERHERO).pack(padx=10, pady=5)
 
         # Submit Button
-        tb.Button(container, text="Submit", command=self.submit_user, bootstyle=SUCCESS).pack(padx=10, pady=10, anchor=W
-                                                                                              , side=LEFT)
-        tb.Button(container, text="Cancel", command=self.cancel, bootstyle=SUCCESS).pack(padx=10, pady=10, anchor=W
-                                                                                              , side=LEFT)
+        tb.Button(container, text="Submit", command=self.submit_user, bootstyle=SUCCESS).pack(padx=10, pady=10,
+                                                                                              anchor=W, side=LEFT)
+        tb.Button(container, text="Cancel", command=self.cancel, bootstyle=SUCCESS).pack(padx=10, pady=10, anchor=W,
+                                                                                         side=LEFT)
 
     def submit_user(self):
         name = self.email.get()

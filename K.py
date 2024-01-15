@@ -55,6 +55,7 @@ LIGHT = 'light'
 DARK = 'dark'
 SUPERHERO = 'superhero'
 
+
 # Bootstyle Types
 OUTLINE = 'outline'
 LINK = 'link'
