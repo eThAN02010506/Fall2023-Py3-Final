@@ -14,7 +14,7 @@ class TasksView(View):
 
     def background(self):
         # Load the background image
-        background_image = tk.PhotoImage(file="Images/截屏2024-01-15 21.31.11.png")
+        background_image = tk.PhotoImage(file="Images/截屏2024-01-15 23.20.45.png")
 
         # Create a Label with the background image (couldn't figure out how to use ttkbootstrap to do this... so, used
         # tkinter.)
@@ -87,7 +87,21 @@ class TaskView(View):
         self.desc = tb.StringVar()
         self.priority = tb.IntVar(value=1)
         self.complete = tb.BooleanVar(value=False)
+        self.background()
         self.create_widgets()
+    def background(self):
+        # Load the background image
+        background_image = tk.PhotoImage(file="Images/截屏2024-01-15 23.23.24.png")
+
+        # Create a Label with the background image (couldn't figure out how to use
+        # tkinter.)
+        background_label = tk.Label(self.frame, image=background_image)
+        background_label.photo = background_image
+        background_label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+
+
+
+
 
     def create_widgets(self):
         # Create a container frame to organize widgets
@@ -150,7 +164,7 @@ class CreateTaskView(View):
         self.create_widgets()
     def background(self):                                                                                             
         # Load the background image
-        background_image = tk.PhotoImage(file="Images/截屏2024-01-15 21.31.11.png")
+        background_image = tk.PhotoImage(file="Images/截屏2024-01-15 23.23.24.png")
 
         # Create a Label with the background image (couldn't figure out how to use ttkbootstrap to do this... so, used
         # tkinter.)
